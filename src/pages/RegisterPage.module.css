@@ -1,5 +1,15 @@
+button,
+input[type="submit"],
+input[type="reset"] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
 .page {
-  /* border: 1px solid red; */
   height: 100vh;
   display: flex;
   align-items: center;
@@ -7,9 +17,8 @@
 
 .container {
   border-radius: 10px;
-  max-width: 50%;
   height: 400px;
-  max-height: 365px;
+  max-width: 327px;
   margin: 0 auto;
   background-color: #161d2f;
 }
@@ -17,9 +26,7 @@
   font-size: 40px;
   margin-right: auto;
 }
-.form {
-  /* border: 1px solid orange; */
-}
+
 .innerContainer {
   max-width: 80%;
   margin: 0 auto;
@@ -57,12 +64,16 @@
   color: whitesmoke;
   border-radius: 10px;
 }
+.btnWrapper {
+  padding-top: 2rem;
+}
 .btnLogin {
   background-color: transparent;
   border: none;
   outline: none;
   color: #fc4747;
   font-size: 19px;
+  text-decoration: none;
 }
 .paragraph {
   text-align: center;

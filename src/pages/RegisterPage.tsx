@@ -1,22 +1,37 @@
-import React from "react";
+import { User } from "firebase/auth";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { createUser } from "../firebase";
 import styles from "./RegisterPage.module.css";
+
 type Inputs = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
-type Props = {};
+type Props = {
+  user: User | null | undefined;
+};
 
-export const RegisterPage = (props: Props) => {
+export const RegisterPage = ({ user }: Props) => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
     createUser(data.email, data.password);
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -35,28 +50,41 @@ export const RegisterPage = (props: Props) => {
 
             {/* include validation with required or other standard HTML validation rules */}
             <input
-              type="password"
-              {...register("password", { required: true })}
-              placeholder="Password"
               className={styles.passwordInput}
-            />
-            <input
+              placeholder="Password"
               type="password"
+              {...register("password", {
+                required: true,
+              })}
+            />
+            {errors.password && <span>{errors.password.message}</span>}
+            <input
               placeholder="Repeat password"
               className={styles.repeatPasswordInput}
+              type="password"
+              {...register("confirmPassword", {
+                required: true,
+                validate: (val: string) => {
+                  if (watch("password") !== val) {
+                    return "Your passwords do no match";
+                  }
+                },
+              })}
             />
+            {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
             {/* errors will return when field validation fails  */}
-            {errors.password && <span>This field is required</span>}
+            <div className={styles.btnWrapper}>
+              <button type="submit" className={styles.btn}>
+                Create an account
+              </button>
+            </div>
           </form>
-          <div>
-            <button type="submit" className={styles.btn}>
-              Create an account
-            </button>
-          </div>
           <div>
             <p className={styles.paragraph}>
               Alread have an account ?
-              <button className={styles.btnLogin}>Login</button>
+              <a href="/login" className={styles.btnLogin}>
+                Login
+              </a>
             </p>
           </div>
         </div>

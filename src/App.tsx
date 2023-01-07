@@ -1,25 +1,26 @@
-import React, { useState } from "react";
 import { Routes, Route } from "react-router";
+import { auth } from "./firebase";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { ProtectedRoute } from "./components/ProtectedRoutes";
 
 function App() {
-  const [show, setShow] = useState(true);
+  const [user] = useAuthState(auth);
+
   return (
     <Routes>
-      {/* {show ? (
-        <Route path="/" element={<HomePage />} />
-      ) : (
-        // <Route path="/register" element={<RegisterPage />} /> || (
-        //   <Route path="/login" element={<LoginPage />} />
-        // )
-        <Route path="/login" element={<LoginPage />} /> || (
-          <Route path="/register" element={<RegisterPage />} />
-        )
-      )} */}
-      <Route path="/register" element={<RegisterPage />} />
-      {/* <Route path="/login" element={<LoginPage />} /> */}
+      <Route path="/login" element={<LoginPage user={user} />} /> || (
+      <Route path="/register" element={<RegisterPage user={user} />} />)
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute user={user}>
+            <HomePage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
